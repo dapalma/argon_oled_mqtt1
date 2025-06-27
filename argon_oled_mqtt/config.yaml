@@ -1,0 +1,21 @@
+name: Argon OLED Display
+version: "1.0"
+slug: argon_oled_mqtt
+description: Displays MQTT messages on Argon OLED.
+startup: services
+boot: auto
+ingress: false
+panel_icon: mdi:monitor
+arch:
+  - armv7
+  - aarch64
+init: false
+privileged: []
+
+options:
+  mqtt_broker: 192.168.1.100
+  mqtt_topic: ha/pi/cpu_temp
+
+schema:
+  mqtt_broker: str
+  mqtt_topic: str
