@@ -1,10 +1,33 @@
-FROM ghcr.io/home-assistant/amd64-base-debian:bookworm
+# syntax=docker/dockerfile:1
 
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip i2c-tools && \
-    pip3 install paho-mqtt adafruit-circuitpython-ssd1306
-    
-COPY run.sh /run.sh
-COPY oled_display.py /oled_display.py
+# 🧱 Stage 1: Build
+FROM node:20-alpine AS builder
+WORKDIR /app
 
-CMD [ "/run.sh" ]
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy source code
+COPY . .
+
+# 🧪 Optional: Run tests
+# RUN npm test
+
+# 🧼 Clean up unnecessary files
+RUN rm -rf tests docs
+
+# 🧊 Stage 2: Production
+FROM node:20-alpine
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# Copy only necessary files from builder
+COPY --from=builder /app .
+
+# Expose port and define startup
+EXPOSE 3000
+CMD ["node", "index.js"]
