@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy local files into container
 COPY run.sh /run.sh
 COPY oled_display.py /oled_display.py
-COPY config.yml /config.yml
+COPY config.yaml /config.yml
 
 # Optional: Install Python dependencies
 # If you have a requirements.txt, uncomment this:
