@@ -13,7 +13,7 @@ init: false
 privileged: []
 
 options:
-  mqtt_broker: 192.168.1.100
+  mqtt_broker: 192.168.2.100
   mqtt_topic: ha/pi/cpu_temp
 
 schema:
