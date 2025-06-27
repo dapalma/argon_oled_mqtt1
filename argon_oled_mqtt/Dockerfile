@@ -1,33 +1,24 @@
-# syntax=docker/dockerfile:1
+# Base image
+FROM python:3.11-alpine
 
-# 🧱 Stage 1: Build
-FROM node:20-alpine AS builder
+# Set environment
+ENV LANG C.UTF-8
+
+# Set working directory
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm ci --omit=dev
+# Copy local files into container
+COPY run.sh /run.sh
+COPY oled_display.py /oled_display.py
+COPY config.yml /config.yml
 
-# Copy source code
-COPY . .
+# Optional: Install Python dependencies
+# If you have a requirements.txt, uncomment this:
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
 
-# 🧪 Optional: Run tests
-# RUN npm test
+# Make your script executable
+RUN chmod +x /run.sh
 
-# 🧼 Clean up unnecessary files
-RUN rm -rf tests docs
-
-# 🧊 Stage 2: Production
-FROM node:20-alpine
-WORKDIR /app
-
-# Create non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
-
-# Copy only necessary files from builder
-COPY --from=builder /app .
-
-# Expose port and define startup
-EXPOSE 3000
-CMD ["node", "index.js"]
+# Run your startup script
+CMD [ "/run.sh" ]
