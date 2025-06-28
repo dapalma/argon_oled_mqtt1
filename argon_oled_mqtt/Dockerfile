@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.11-alpine
+FROM python:3.11-slim
 
 # Set environment
 ENV LANG C.UTF-8
