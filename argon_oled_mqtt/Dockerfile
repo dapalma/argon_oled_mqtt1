@@ -1,27 +1,19 @@
-# Base image
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-# Set environment
-ENV LANG C.UTF-8
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    python3-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libfreetype6-dev \
+    libopenjp2-7-dev
 
-# Set working directory
 WORKDIR /app
-
-# Copy local files into container
-COPY run.sh /run.sh
-COPY oled_display.py /oled_display.py
-COPY oled_mqtt_display.py /oled_mqtt_display.py
-COPY config.yaml /config.yml
 COPY requirements.txt .
-RUN pip install --no-cache-dir -- verbose -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Optional: Install Python dependencies
-# If you have a requirements.txt, uncomment this:
-# COPY requirements.txt .
-# RUN pip install --no-cache-dir -r requirements.txt
-
-# Make your script executable
+COPY oled_mqtt_display.py .
+COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
-# Run your startup script
-CMD [ "/run.sh" ]
+CMD ["/run.sh"]
