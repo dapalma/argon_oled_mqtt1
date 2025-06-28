@@ -10,7 +10,10 @@ WORKDIR /app
 # Copy local files into container
 COPY run.sh /run.sh
 COPY oled_display.py /oled_display.py
+COPY oled_mqtt_display.py
 COPY config.yaml /config.yml
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Optional: Install Python dependencies
 # If you have a requirements.txt, uncomment this:
